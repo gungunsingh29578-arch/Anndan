@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Food Service Dashboard</title>
+  </head>
+  <body>
+    <p>Opening Food Service Dashboard...</p>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      params.set("organizationType", "food-service-establishment");
+      window.location.replace(`./dashboard.html?${params.toString()}`);
+    </script>
+  </body>
+</html>

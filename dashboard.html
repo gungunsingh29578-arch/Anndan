@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Annadan Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Annadan Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      .ticker-wrap {
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.06), rgba(255, 255, 255, 0.7), rgba(251, 191, 36, 0.09));
+      }
+
+      .ticker-track {
+        display: inline-flex;
+        align-items: center;
+        min-width: max-content;
+        gap: 1.25rem;
+        padding: 0.7rem 0;
+        animation: tickerSlide 18s linear infinite;
+      }
+
+      .ticker-item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #0f172a;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 0.45rem 0.9rem;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+      }
+
+      @keyframes tickerSlide {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      .company-box {
+        animation: companyFade 2s ease-in-out infinite;
+      }
+
+      @keyframes companyFade {
+        0%, 100% { opacity: 0.75; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.03); }
+      }
+    </style>
+  </head>
+  <body id="dashboardBody" class="min-h-screen text-gray-900">
+    <main class="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-4 py-10">
+      <section class="w-full max-w-6xl rounded-3xl bg-white/90 p-6 shadow-xl ring-1 ring-amber-100 sm:p-8 backdrop-blur-sm">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-center gap-4">
+            <div class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-emerald-50 ring-2 ring-emerald-100">
+              <img id="userAvatar" src="photo.png" alt="User profile" class="h-full w-full object-cover" />
+            </div>
+            <a id="profileLink" href="./donor-profile.html" class="text-sm font-semibold text-emerald-700 hover:underline">Profile</a>
+          </div>
+          <div class="flex flex-col items-start gap-2 sm:items-end">
+            <p id="dashboardRoleLabel" class="text-sm font-medium text-gray-600"></p>
+            <div class="flex flex-wrap items-center justify-end gap-2">
+              <a id="preDonationBtn" href="./pre-donation.html?from=dashboard" class="hidden inline-flex items-center justify-center rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+                Pre Donation
+              </a>
+              <a id="dashboardRewardBtn" href="./reward.html?role=donor&from=dashboard" class="hidden inline-flex items-center justify-center rounded-full bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-purple-700">
+                View Rewards
+              </a>
+              <a id="unreceivedOrderBtn" href="./unreceived-order-donation.html?role=donor&from=dashboard" class="hidden inline-flex items-center justify-center rounded-full bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700">
+                Unreceived Order Donate
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8 text-center">
+          <h1 id="dashboardTitle" class="text-3xl font-extrabold tracking-tight text-gray-900"></h1>
+          <p id="dashboardSubtitle" class="mt-3 text-sm text-gray-600"></p>
+          <div id="dashboardNotification" class="mt-5 hidden rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"></div>
+        </div>
+
+        <div class="mb-6 overflow-hidden rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 via-white to-amber-50 shadow-sm">
+          <div class="ticker-wrap">
+            <div class="ticker-track">
+              <div class="ticker-item">Ankit Company</div>
+              <div class="ticker-item">Shivam Company</div>
+              <div class="ticker-item">Gungun Company</div>
+              <div class="ticker-item">Nishant Company</div>
+              <div class="ticker-item">Vedant Company</div>
+              <div class="ticker-item">Ujjwal Company</div>
+              <div class="ticker-item">Ankit Company</div>
+              <div class="ticker-item">Shivam Company</div>
+              <div class="ticker-item">Gungun Company</div>
+              <div class="ticker-item">Nishant Company</div>
+              <div class="ticker-item">Vedant Company</div>
+              <div class="ticker-item">Ujjwal Company</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8 grid gap-4 sm:grid-cols-2">
+          <div id="companyRotateBox1" class="company-box flex items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-5 text-center text-sm font-semibold text-emerald-800 shadow-sm">
+            Ankit Company
+          </div>
+          <div id="companyRotateBox2" class="company-box flex items-center justify-center rounded-2xl border border-amber-200 bg-amber-50 px-4 py-5 text-center text-sm font-semibold text-amber-800 shadow-sm">
+            Shivam Company
+          </div>
+        </div>
+
+        <div id="foodServiceAdvertisement" class="mb-8 hidden rounded-3xl border border-sky-200 bg-sky-50 p-6 text-center shadow-sm">
+          <p class="text-xs font-bold uppercase tracking-widest text-sky-700">Food Service Partnership</p>
+          <h2 class="mt-2 text-2xl font-extrabold text-slate-900">Turn every unreceived order into a useful donation</h2>
+          <p class="mx-auto mt-2 max-w-2xl text-sm text-slate-700">Share safe surplus orders with verified receivers in Greater Noida and reduce food waste responsibly.</p>
+        </div>
+
+
+        <div class="grid gap-6 md:grid-cols-2">
+          <article class="relative overflow-hidden rounded-3xl shadow-sm" style="background-image:url('https://images.unsplash.com/photo-1522770179533-24471fcdba45?auto=format&fit=crop&w=1200&q=80'); background-size:cover; background-position:center;">
+            <div class="absolute inset-0 bg-black/30"></div>
+            <div class="relative rounded-3xl border border-emerald-100 bg-white/85 p-6">
+              <h2 id="sectionATitle" class="text-xl font-semibold text-gray-900">Donate for needy people </h2>
+              <p id="sectionADescription" class="mt-3 text-sm text-gray-700">
+                Register safe food donations for people living in your local area.
+              </p>
+              <div class="mt-6 flex flex-col gap-3">
+                <button id="sectionAButton" type="button" class="rounded-full bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700">
+                  Add Human Donation
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="relative overflow-hidden rounded-3xl shadow-sm" style="background-image:url('https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=1200&q=80'); background-size:cover; background-position:center;">
+            <div class="absolute inset-0 bg-black/30"></div>
+            <div class="relative rounded-3xl border border-orange-100 bg-white/85 p-6">
+              <h2 id="sectionBTitle" class="text-xl font-semibold text-gray-900">Animal Donation</h2>
+              <p id="sectionBDescription" class="mt-3 text-sm text-gray-700">
+                Donate leftover food to animals and shelters that can reuse it safely.
+              </p>
+              <div class="mt-6 flex flex-col gap-3">
+                <button id="sectionBButton" type="button" class="rounded-full bg-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">
+                  Add Animal Donation
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div id="societyDonationPanel" class="mb-8 hidden grid gap-6 justify-items-center md:grid-cols-2">
+          <div class="flex h-full w-full max-w-sm flex-col items-center justify-center rounded-3xl border border-sky-100 bg-sky-50 p-6 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <h3 class="text-lg font-semibold text-gray-900">Money Donation</h3>
+            <p class="mt-2 text-sm text-gray-600">Donate money to support food relief.</p>
+            <button id="donorMoneyDonationBtn" type="button" class="mt-5 inline-flex w-full max-w-[220px] items-center justify-center rounded-full bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700">
+              Donate Money
+            </button>
+          </div>
+
+          <div class="flex h-full w-full max-w-sm flex-col items-center justify-center rounded-3xl border border-amber-100 bg-amber-50 p-6 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <h3 class="text-lg font-semibold text-gray-900">Raw Ingredients</h3>
+            <p class="mt-2 text-sm text-gray-600">Donate raw ingredients to NGOs.</p>
+            <button id="donorRawDonationBtn" type="button" class="mt-5 inline-flex w-full max-w-[220px] items-center justify-center rounded-full bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700">
+              Donate Raw Items
+            </button>
+          </div>
+        </div>
+
+        <div id="donorNgoPanel" class="mb-8 hidden">
+          <div class="rounded-3xl border border-emerald-100 bg-emerald-50 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Select NGO for Donation</h3>
+            <select id="donorNgoSelect" class="w-full rounded-xl border border-emerald-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 mb-4">
+              <option value="">Choose an NGO...</option>
+              <option value="hope">Hope Foundation</option>
+              <option value="aasha">Aasha Community NGO</option>
+              <option value="seva">Seva Food Support</option>
+            </select>
+            <div id="donorBankDetails" class="mt-4 text-sm text-gray-700"></div>
+            <a id="donorRawContinue" href="#" class="mt-4 hidden block w-full rounded-full bg-amber-600 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-amber-700">
+              Continue to Raw Items
+            </a>
+            <div class="mt-4 hidden">
+              <input id="donorMoneyAmount" type="number" placeholder="Enter amount (INR)" class="w-full rounded-xl border border-emerald-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              <button id="donorMoneyConfirmBtn" type="button" class="mt-3 w-full rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
+                Confirm Money Donation
+              </button>
+            </div>
+            <div id="donorMoneyPanel" class="hidden">
+              <input id="donorMoneyAmount" type="number" placeholder="Enter amount (INR)" class="w-full rounded-xl border border-emerald-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+              <button id="donorMoneyConfirmBtn" type="button" class="mt-3 w-full rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
+                Confirm Money Donation
+              </button>
+            </div>
+            <div id="donorDonationStatus" class="hidden mt-3"></div>
+          </div>
+        </div>
+
+        <div id="donorMapSection" class="mt-10 hidden rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-900">Receiver Locations</h2>
+              <p class="mt-2 text-sm text-gray-600">Find NGOs and Food Shelters that need food support in Greater Noida.</p>
+            </div>
+            <button id="refreshDonorMapBtn" type="button" class="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition">
+              Refresh Map
+            </button>
+          </div>
+          <div class="mt-6 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <div id="donorMap" class="min-h-[360px] rounded-3xl border border-slate-200"></div>
+            <div class="space-y-3 overflow-y-auto max-h-[360px] rounded-3xl border border-slate-200 bg-slate-50 p-4" id="donorHitList"></div>
+          </div>
+        </div>
+
+        <div id="receiverMapSection" class="mt-10 rounded-3xl border border-slate-200 bg-white/95 p-6 shadow-sm">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-900">NGO & Food Shelter Locations</h2>
+              <p class="mt-2 text-sm text-gray-600">Find NGOs and Food Shelters across Greater Noida sectors.</p>
+            </div>
+            <button id="refreshRequestMapBtn" type="button" class="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition">
+              Open in Google Maps
+            </button>
+          </div>
+          <div class="mt-6 grid gap-6 lg:grid-cols-2">
+            <div id="requestHitList" class="space-y-3 rounded-3xl border border-slate-200 bg-slate-50 p-4"></div>
+            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+              <p class="text-sm text-gray-600 mb-4">Click on any location below to view on Google Maps or view all locations at once.</p>
+              <button id="viewAllMapBtn" type="button" class="w-full rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition">
+                View All on Google Maps
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="leaderboardSection" class="mt-10 hidden">
+          <div class="rounded-3xl border border-amber-100 bg-white/90 p-6 shadow-sm">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 class="text-xl font-semibold text-gray-900">Donation Leaderboard</h2>
+                <p class="mt-2 text-sm text-gray-600">Top donors ranked by total donation volume.</p>
+              </div>
+              <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700">Top Giver</span>
+            </div>
+            <div id="leaderboardList" class="mt-5 space-y-3"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./api.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const role = params.get("role");
+        const from = params.get("from");
+        const receiverType = params.get("receiverType") || "ngo";
+        let savedOrganizationType = "";
+        try {
+          savedOrganizationType = JSON.parse(localStorage.getItem("annadanProfile") || "{}").organizationType || "";
+        } catch (error) {
+          savedOrganizationType = "";
+        }
+        const organizationType = params.get("organizationType") || savedOrganizationType || "society";
+
+        if (from !== "login" || !role || !["donor", "receiver"].includes(role)) {
+          window.location.replace("./login.html?from=home");
+          return;
+        }
+
+        const dashboardTitle = document.getElementById("dashboardTitle");
+        const dashboardSubtitle = document.getElementById("dashboardSubtitle");
+        const dashboardRoleLabel = document.getElementById("dashboardRoleLabel");
+        const companyRotateBox1 = document.getElementById("companyRotateBox1");
+        const companyRotateBox2 = document.getElementById("companyRotateBox2");
+        const companyNames = ["Ankit Company", "Shivam Company", "Gungun Company", "Nishant Company", "Vedant Company", "Ujjwal Company"];
+        let companyIndex = 0;
+        const rotateCompanyBoxes = () => {
+          if (!companyRotateBox1 || !companyRotateBox2) return;
+          companyIndex = (companyIndex + 1) % companyNames.length;
+          const nextNameA = companyNames[(companyIndex) % companyNames.length];
+          const nextNameB = companyNames[(companyIndex + 1) % companyNames.length];
+          companyRotateBox1.textContent = nextNameA;
+          companyRotateBox2.textContent = nextNameB;
+        };
+        setInterval(rotateCompanyBoxes, 2000);
+        const sectionATitle = document.getElementById("sectionATitle");
+        const sectionADescription = document.getElementById("sectionADescription");
+        const sectionBTitle = document.getElementById("sectionBTitle");
+        const sectionBDescription = document.getElementById("sectionBDescription");
+        const sectionAButton = document.getElementById("sectionAButton");
+        const sectionBButton = document.getElementById("sectionBButton");
+        const rewardPageBtn = document.getElementById("rewardPageBtn");
+        const dashboardRewardBtn = document.getElementById("dashboardRewardBtn");
+        const unreceivedOrderBtn = document.getElementById("unreceivedOrderBtn");
+        const foodServiceAdvertisement = document.getElementById("foodServiceAdvertisement");
+        const profileLink = document.getElementById("profileLink");
+        const userAvatar = document.getElementById("userAvatar");
+        const preDonationBtn = document.getElementById("preDonationBtn");
+        const leaderboardSection = document.getElementById("leaderboardSection");
+        const leaderboardList = document.getElementById("leaderboardList");
+        const donorMapSection = document.getElementById("donorMapSection");
+        const donorMap = document.getElementById("donorMap");
+        const donorHitList = document.getElementById("donorHitList");
+        const refreshDonorMapBtn = document.getElementById("refreshDonorMapBtn");
+        const requestMapSection = document.getElementById("receiverMapSection");
+        const requestMap = document.getElementById("requestMap");
+        const requestHitList = document.getElementById("requestHitList");
+        const refreshRequestMapBtn = document.getElementById("refreshRequestMapBtn");
+        const dashboardBody = document.getElementById("dashboardBody");
+        const dashboardNotification = document.getElementById("dashboardNotification");
+        const donorDonationOptions = document.getElementById("donorDonationOptions");
+
+        const isDonor = role === "donor";
+        const isShelter = !isDonor && receiverType === "shelter";
+        const isFoodService = organizationType === "food-service-establishment";
+
+        if (profileLink) {
+          profileLink.classList.remove("hidden");
+          profileLink.href = isDonor
+            ? "./donor-profile.html"
+            : `./receiver-profile.html?receiverType=${encodeURIComponent(receiverType)}`;
+        }
+        try {
+          const profile = JSON.parse(localStorage.getItem("annadanProfile") || "{}");
+          if (profile.photo && userAvatar) userAvatar.src = profile.photo;
+        } catch (error) {
+          // Keep the default avatar when profile data is unavailable.
+        }
+
+        dashboardTitle.textContent = isDonor ? "Donor Insight" : "Receiver Insights";
+        dashboardSubtitle.textContent = isDonor
+          ? "Choose whether you want to donate food for humans or animals."
+          : "Choose whether you need food support for humans or animals.";
+        dashboardRoleLabel.textContent = isDonor ? "Signed in as Donor" : "Signed in as Receiver";
+
+        sectionATitle.textContent = isDonor ? "Human Donation" : "Human Request";
+        sectionADescription.textContent = isDonor
+          ? "Register safe food donations for needy people living in your local area."
+          : "Request food support for people who need it most.";
+        sectionAButton.textContent = isDonor ? "Add Human Donation" : "Request Human Support";
+
+        sectionBTitle.textContent = isDonor ? "Animal Donation" : "Animal Request";
+        sectionBDescription.textContent = isDonor
+          ? "Donate leftover food to animals and shelters that can reuse it safely."
+          : "Request food support for animals in need in your community.";
+        sectionBButton.textContent = isDonor ? "Add Animal Donation" : "Request Animal Support";
+        if (!isDonor) {
+          sectionATitle.closest("article").classList.toggle("hidden", isShelter);
+          sectionBTitle.closest("article").classList.toggle("hidden", !isShelter);
+          dashboardTitle.textContent = isShelter ? "Animal Shelter Dashboard" : "NGO Dashboard";
+          dashboardSubtitle.textContent = isShelter ? "Request food support for animals from nearby donors." : "Request food support for people from nearby donors.";
+        }
+
+        if (preDonationBtn) {
+          preDonationBtn.classList.toggle("hidden", !isDonor || isFoodService);
+          preDonationBtn.href = `./pre-donation.html?from=dashboard&role=${role}`;
+        }
+
+        if (dashboardRewardBtn) {
+          dashboardRewardBtn.classList.toggle("hidden", !isDonor || isFoodService);
+          dashboardRewardBtn.href = `./reward.html?role=${role}&from=dashboard${organizationType ? `&organizationType=${encodeURIComponent(organizationType)}` : ""}`;
+        }
+
+        if (rewardPageBtn) {
+          rewardPageBtn.classList.add("hidden");
+        }
+
+        if (unreceivedOrderBtn) {
+          unreceivedOrderBtn.classList.toggle("hidden", !isDonor || !isFoodService);
+          unreceivedOrderBtn.href = `./unreceived-order-donation.html?role=${role}&from=dashboard&organizationType=${encodeURIComponent(organizationType)}&sector=${encodeURIComponent(params.get("sector") || "")}`;
+        }
+
+        if (foodServiceAdvertisement) {
+          foodServiceAdvertisement.classList.toggle("hidden", !isDonor || !isFoodService);
+        }
+        if (donorDonationOptions) {
+          donorDonationOptions.classList.add("hidden");
+        }
+
+        const donorRawDonationBtn = document.getElementById("donorRawDonationBtn");
+        const donorMoneyDonationBtn = document.getElementById("donorMoneyDonationBtn");
+        const donorNgoPanel = document.getElementById("donorNgoPanel");
+        const donorNgoSelect = document.getElementById("donorNgoSelect");
+        const donorMoneyPanel = document.getElementById("donorMoneyPanel");
+        const donorBankDetails = document.getElementById("donorBankDetails");
+        const donorRawContinue = document.getElementById("donorRawContinue");
+        const donorDonationStatus = document.getElementById("donorDonationStatus");
+        const donorNgos = {};
+        const loadOrganizations = async () => {
+          try {
+            const data = await window.AnnadanAPI.request("/organizations");
+            (data.receivers || []).forEach((org) => {
+              if (org.type === "NGO") {
+                donorNgos[org._id] = {
+                  name: org.name,
+                  sector: org.sector || org.city || "Greater Noida",
+                  account: "SAMPLE-DEMO",
+                  ifsc: "SAMPLE",
+                  sample: org.isSample,
+                };
+              }
+            });
+            if (donorNgoSelect) {
+              const ngoOptions = Object.entries(donorNgos)
+                .map(([id, ngo]) => `<option value="${id}">${ngo.name}</option>`)
+                .join("");
+              donorNgoSelect.innerHTML = `<option value="">Choose an NGO...</option>${ngoOptions}`;
+            }
+            return data.receivers || [];
+          } catch (error) {
+            return [];
+          }
+        };
+        const showDonorDonationStatus = (message, error = false) => {
+          if (!donorDonationStatus) return;
+          donorDonationStatus.textContent = message;
+          donorDonationStatus.className = `mt-2 text-sm ${error ? "text-red-600" : "text-emerald-700"}`;
+          donorDonationStatus.classList.remove("hidden");
+        };
+        const setDonorDonationMode = (mode) => {
+          donorNgoPanel.classList.remove("hidden");
+          donorMoneyPanel.classList.toggle("hidden", mode !== "money");
+          donorRawContinue.classList.toggle("hidden", mode !== "raw");
+          showDonorDonationStatus(`Select a nearby NGO for your ${mode === "raw" ? "raw ingredients" : "money"} donation.`);
+        };
+        donorRawDonationBtn.addEventListener("click", () => setDonorDonationMode("raw"));
+        donorMoneyDonationBtn.addEventListener("click", () => setDonorDonationMode("money"));
+        donorNgoSelect.addEventListener("change", () => {
+          const ngo = donorNgos[donorNgoSelect.value];
+          if (!ngo) return;
+          donorRawContinue.href = `./raw-ingredients-donation.html?role=${role}&from=dashboard&organizationType=${encodeURIComponent(organizationType)}&ngo=${encodeURIComponent(ngo.name)}`;
+          donorBankDetails.innerHTML = `<strong>${ngo.name}</strong><br>Location: ${ngo.sector}<br>Account Number: ${ngo.account}<br>IFSC: ${ngo.ifsc}`;
+          showDonorDonationStatus(`${ngo.name} selected.`);
+        });
+        document.getElementById("donorMoneyConfirmBtn").addEventListener("click", async () => {
+          const ngo = donorNgos[donorNgoSelect.value];
+          const amount = Number(document.getElementById("donorMoneyAmount").value);
+          if (!ngo || !amount || amount < 1) {
+            showDonorDonationStatus("Select an NGO and enter a valid amount.", true);
+            return;
+          }
+          try {
+            await window.AnnadanAPI.request("/extras/money-donations", {
+              method: "POST",
+              body: { amount, ngoName: ngo.name, ngo: ngo.name, sector: ngo.sector },
+            });
+            showDonorDonationStatus(`Money donation of INR ${amount} recorded for ${ngo.name}.`);
+          } catch (error) {
+            showDonorDonationStatus(error.message || "Could not record money donation.", true);
+          }
+        });
+
+        if (leaderboardSection) {
+          leaderboardSection.classList.toggle("hidden", !isDonor);
+        }
+
+        const societyDonationPanel = document.getElementById("societyDonationPanel");
+        if (societyDonationPanel) {
+          societyDonationPanel.classList.toggle("hidden", !isDonor || organizationType !== "society");
+        }
+
+        const showNotification = (message) => {
+          if (!dashboardNotification) return;
+          dashboardNotification.textContent = message;
+          dashboardNotification.classList.remove("hidden");
+          setTimeout(() => {
+            dashboardNotification.classList.add("hidden");
+          }, 3200);
+        };
+
+        let donorMapInstance = null;
+        let donorMapLayer = null;
+        let receiverMapInstance = null;
+        let receiverMapLayer = null;
+
+        const defaultReceiverSites = [
+          { name: "Receiver Support Point", coords: [28.4697, 77.5155], category: "Sector Alpha 1 - Human support" },
+          { name: "Community Receiver", coords: [28.4771, 77.5022], category: "Sector Beta 1 - Human support" },
+          { name: "Animal Shelter Receiver", coords: [28.4647, 77.5133], category: "Sector Gamma 1 - Animal support" },
+          { name: "Food Support Center", coords: [28.4529, 77.5200], category: "Sector Delta 1 - Human support" },
+          { name: "Knowledge Park Receiver", coords: [28.4744, 77.4850], category: "Sector Knowledge Park - Human support" },
+        ];
+
+        const renderDonorHitList = (sites) => {
+          if (!donorHitList) return;
+          donorHitList.innerHTML = sites
+            .map(
+              (site) =>
+                `<div class="rounded-2xl bg-white p-4 shadow-sm">
+                  <p class="font-semibold text-gray-900">${site.name}</p>
+                  <p class="mt-1 text-sm text-gray-600">${site.category}</p>
+                </div>`
+            )
+            .join("");
+        };
+
+        const ensureDonorMap = () => {
+          if (!donorMap || donorMapInstance) return;
+          donorMapInstance = L.map("donorMap", { scrollWheelZoom: false }).setView([28.4744, 77.5020], 12);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; OpenStreetMap contributors',
+          }).addTo(donorMapInstance);
+          donorMapLayer = L.layerGroup().addTo(donorMapInstance);
+        };
+
+        const renderDonorMap = (sites) => {
+          if (!donorMap) return;
+          ensureDonorMap();
+          if (!donorMapLayer) return;
+          donorMapLayer.clearLayers();
+
+          const markers = sites.map((site) => {
+            return L.marker(site.coords)
+              .bindPopup(`<strong>${site.name}</strong><br>${site.category}`)
+              .addTo(donorMapLayer);
+          });
+
+          if (markers.length && donorMapInstance) {
+            const group = L.featureGroup(markers);
+            donorMapInstance.fitBounds(group.getBounds().pad(0.15));
+          }
+        };
+
+        let liveReceiverSites = defaultReceiverSites;
+
+        const renderDonorLocations = () => {
+          if (donorMapSection) donorMapSection.classList.toggle("hidden", !isDonor);
+          if (!isDonor) return;
+          renderDonorHitList(liveReceiverSites);
+          renderDonorMap(liveReceiverSites);
+        };
+
+        const greaterNoidaDonorHits = [
+          { state: "Sector 18", coords: [28.5708, 77.3261], type: "Human donor" },
+          { state: "Sector  Alpha 1", coords: [28.4697, 77.5155], type: "Animal donor" },
+          { state: "Sector Beta 1", coords: [28.4771, 77.5022], type: "Human donor" },
+          { state: "Sector Gamma 1", coords: [28.4647, 77.5133], type: "Human donor" },
+          { state: "Sector Delta 1", coords: [28.4529, 77.5200], type: "Animal donor" },
+          { state: "Sector Knowledge Park", coords: [28.4744, 77.4850], type: "Human donor" },
+          { state: "Sector Techzone", coords: [28.6028, 77.4130], type: "Animal donor" },
+          { state: "Sector 137", coords: [28.5067, 77.4108], type: "Human donor" },
+          { state: "Sector 150", coords: [28.4512, 77.4756], type: "Human donor" },
+          { state: "Sector 16C", coords: [28.5550, 77.3200], type: "Animal donor" },
+        ];
+
+        const loadReceiverRequests = () => {
+          const stored = localStorage.getItem("annadanReceiverRequests");
+          const savedRequests = stored ? JSON.parse(stored) : [];
+          return [...greaterNoidaDonorHits, ...savedRequests];
+        };
+
+        const saveReceiverRequest = (request) => {
+          const stored = localStorage.getItem("annadanReceiverRequests");
+          const savedRequests = stored ? JSON.parse(stored) : [];
+          savedRequests.push(request);
+          localStorage.setItem("annadanReceiverRequests", JSON.stringify(savedRequests));
+        };
+
+        const renderRequestHitList = (requests) => {
+          if (!requestHitList) return;
+          requestHitList.innerHTML = requests
+            .map(
+              (item) => {
+                const googleMapsUrl = `https://www.google.com/maps?q=${item.coords[0]},${item.coords[1]}`;
+                return `<a href="${googleMapsUrl}" target="_blank" rel="noopener" class="rounded-2xl bg-white p-4 shadow-sm hover:shadow-md transition block">
+                  <p class="font-semibold text-gray-900">Greater Noida, ${item.state}</p>
+                  <p class="mt-1 text-sm text-gray-600">${item.type}</p>
+                  <p class="mt-2 text-xs text-blue-600 font-semibold">→ Open in Google Maps</p>
+                </a>`;
+              }
+            )
+            .join("");
+        };
+
+        const ensureReceiverMap = () => {
+          // Maps now open in Google Maps, no Leaflet instance needed
+        };
+
+        const renderReceiverMap = (requests) => {
+          // Maps now open in Google Maps, no Leaflet instance needed
+        };
+
+        const renderReceiverRequests = () => {
+          const requests = loadReceiverRequests();
+          if (requestMapSection) requestMapSection.classList.add("hidden");
+          renderRequestHitList(requests);
+        };
+
+        const viewAllMapBtn = document.getElementById("viewAllMapBtn");
+        if (viewAllMapBtn) {
+          viewAllMapBtn.addEventListener("click", () => {
+            const requests = loadReceiverRequests();
+            const coords = requests.map(item => `${item.coords[0]},${item.coords[1]}`).join("/");
+            const googleMapsUrl = `https://www.google.com/maps/dir/${coords}`;
+            window.open(googleMapsUrl, "_blank");
+          });
+        }
+
+        const getRandomStateRequest = (type) => {
+          const pick = greaterNoidaDonorHits[Math.floor(Math.random() * greaterNoidaDonorHits.length)];
+          return { ...pick, type };
+        };
+
+        if (refreshDonorMapBtn) {
+          refreshDonorMapBtn.addEventListener("click", renderDonorLocations);
+        }
+        if (refreshRequestMapBtn) {
+          refreshRequestMapBtn.addEventListener("click", () => {
+            const requests = loadReceiverRequests();
+            const coords = requests.map(item => `${item.coords[0]},${item.coords[1]}`).join("/");
+            const googleMapsUrl = `https://www.google.com/maps/dir/${coords}`;
+            window.open(googleMapsUrl, "_blank");
+          });
+        }
+
+        const registerReceiverRequest = async (type) => {
+          try {
+            await window.AnnadanAPI.request("/organizations/requests", {
+              method: "POST",
+              body: { type, sector: params.get("sector") || "" },
+            });
+          } catch (error) {
+            const request = getRandomStateRequest(type);
+            saveReceiverRequest(request);
+          }
+          window.location.href = `./request-success.html?type=${encodeURIComponent(type.toLowerCase())}&receiverType=${encodeURIComponent(receiverType)}`;
+        };
+
+        const loadLeaderboard = async () => {
+          try {
+            const data = await window.AnnadanAPI.request("/donors/leaderboard");
+            return (data.leaders || []).map((item) => ({ name: item.name, total: item.total }));
+          } catch (error) {
+            return [];
+          }
+        };
+
+        const getOrdinal = (rank) => {
+          if (rank % 100 >= 11 && rank % 100 <= 13) return `${rank}th`;
+          const last = rank % 10;
+          if (last === 1) return `${rank}st`;
+          if (last === 2) return `${rank}nd`;
+          if (last === 3) return `${rank}rd`;
+          return `${rank}th`;
+        };
+
+        const renderLeaderboard = async () => {
+          if (!leaderboardList) return;
+          const leaders = await loadLeaderboard();
+          if (!leaders.length) {
+            leaderboardList.innerHTML = '<p class="rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">No donation totals yet.</p>';
+            return;
+          }
+          leaderboardList.innerHTML = leaders
+            .map((user, index) => {
+              const rank = index + 1;
+              return `<div class="flex items-center justify-between rounded-2xl bg-emerald-50 p-4">
+                  <div>
+                    <p class="font-semibold text-gray-900">${user.name}</p>
+                    <p class="text-sm text-gray-600">${Number(user.total || 0).toFixed(1)} kg donated</p>
+                  </div>
+                  <span class="rounded-full bg-emerald-600 px-3 py-1 text-sm font-semibold text-white">${getOrdinal(rank)}</span>
+                </div>`;
+            })
+            .join("");
+        };
+
+        loadOrganizations().then((receivers) => {
+          if (receivers.length) {
+            liveReceiverSites = receivers
+              .filter((org) => org.latitude != null && org.longitude != null)
+              .map((org) => ({
+                name: org.name,
+                coords: [org.latitude, org.longitude],
+                category: `${org.sector || org.city || "Greater Noida"} - ${org.type}${org.isSample ? " (SAMPLE/DEMO)" : ""}`,
+              }));
+          }
+          if (isDonor) {
+            renderLeaderboard();
+            renderDonorLocations();
+          } else {
+            renderReceiverRequests();
+          }
+        });
+
+        if (dashboardBody) {
+          dashboardBody.style.backgroundImage = isDonor
+            ? "linear-gradient(rgba(255,255,255,0.85), rgba(248,250,240,0.95)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=80')"
+            : "linear-gradient(rgba(255,255,255,0.92), rgba(244,247,250,0.95)), url('https://www.shutterstock.com/shutterstock/photos/531037021/display_1500/stock-vector-charity-donation-center-helping-homeless-and-needy-people-and-animals-isometric-vector-illustration-531037021.jpg')";
+          dashboardBody.style.backgroundSize = "cover";
+          dashboardBody.style.backgroundPosition = "center";
+        }
+
+        sectionAButton.addEventListener("click", () => {
+          if (isDonor) {
+            window.location.href = `./donation-form.html?type=human&role=${role}&organizationType=${encodeURIComponent(organizationType)}`;
+          } else {
+            registerReceiverRequest("Human");
+          }
+        });
+
+        sectionBButton.addEventListener("click", () => {
+          if (isDonor) {
+            window.location.href = `./donation-form.html?type=animal&role=${role}&organizationType=${encodeURIComponent(organizationType)}`;
+          } else {
+            registerReceiverRequest("Animal");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

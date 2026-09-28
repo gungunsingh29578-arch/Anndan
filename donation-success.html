@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thank You for Donation | Annadan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      @keyframes pulse-glow {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .animate-scale-in {
+        animation: fadeInScale 0.8s ease-out;
+      }
+
+      .animate-slide-up {
+        animation: slideInUp 1s ease-out;
+      }
+
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .animate-pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+
+      body {
+        background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 25%, #70d8de 50%, #87ceeb 75%, #e0bbff 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        pointer-events: none;
+        animation: confettiFall 3s ease-in forwards;
+      }
+
+      @keyframes confettiFall {
+        to {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .heart-icon {
+        display: inline-block;
+        animation: float 2.5s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex items-center justify-center px-4 py-10">
+    <main class="w-full max-w-2xl">
+      <section class="rounded-3xl bg-white/95 backdrop-blur-md p-8 sm:p-12 shadow-2xl ring-1 ring-white/20 text-center animate-scale-in">
+        <!-- Success Icon -->
+        <div class="mb-8 flex justify-center">
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-xl animate-pulse-glow">
+            <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Main Message -->
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 mb-4 animate-slide-up">
+          Your Request Submitted!
+        </h1>
+
+        <!-- Donation Type Badge -->
+        <p id="donationTypeBadge" class="inline-block mb-6 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
+          Donation Received
+        </p>
+
+        <!-- Description -->
+        <p class="text-lg text-gray-700 mb-8 leading-relaxed animate-slide-up" style="animation-delay: 0.2s;">
+          We will <span class="font-semibold text-emerald-600">connect you soon</span> to confirm the pickup details and coordinate the donation delivery.
+        </p>
+
+        <!-- Thank You Message -->
+        <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-dashed border-orange-200 animate-slide-up" style="animation-delay: 0.4s;">
+          <p class="text-xl font-semibold text-orange-900 mb-2">
+            <span class="heart-icon">❤️</span> Thanks so much for your donation! <span class="heart-icon">❤️</span>
+          </p>
+          <p class="text-sm text-orange-700">
+            Your contribution will make a real difference in the lives of those in need.
+          </p>
+        </div>
+
+        <!-- What Happens Next -->
+        <div class="mb-8 text-left bg-slate-50 rounded-2xl p-6 border border-slate-200 animate-slide-up" style="animation-delay: 0.6s;">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">What happens next:</h3>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white text-sm font-bold flex-shrink-0 mt-0.5">1</span>
+              <span class="text-gray-700">Our team will review your donation details</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white text-sm font-bold flex-shrink-0 mt-0.5">2</span>
+              <span class="text-gray-700">We'll schedule a convenient pickup time for you</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white text-sm font-bold flex-shrink-0 mt-0.5">3</span>
+              <span class="text-gray-700">You'll receive a confirmation call/message shortly</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white text-sm font-bold flex-shrink-0 mt-0.5">4</span>
+              <span class="text-gray-700">Track your donation and impact in your dashboard</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 animate-slide-up" style="animation-delay: 0.8s;">
+          <a href="./dashboard.html?from=login&role=donor" class="flex-1 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition">
+            Back to Dashboard
+          </a>
+          <a id="trackDonationLink" href="./tracking.html" class="flex-1 inline-flex items-center justify-center rounded-2xl border-2 border-emerald-600 bg-white px-6 py-3 text-base font-semibold text-emerald-600 hover:bg-emerald-50 transition">
+            Track donation
+          </a>
+        </div>
+
+        <!-- Contact Info -->
+        <p class="mt-8 text-sm text-gray-600 animate-slide-up" style="animation-delay: 1s;">
+          Have questions? Contact us at <span class="font-semibold">support@annadan.com</span> or call <span class="font-semibold">+91 XXXX-XXXX-XXXX</span>
+        </p>
+      </section>
+
+      <!-- Floating Decorative Elements -->
+      <div class="fixed top-10 left-10 text-5xl opacity-30 animate-float pointer-events-none">🍎</div>
+      <div class="fixed top-1/4 right-10 text-5xl opacity-30 animate-float pointer-events-none" style="animation-delay: 1s;">🥗</div>
+      <div class="fixed bottom-20 left-1/4 text-5xl opacity-30 animate-float pointer-events-none" style="animation-delay: 2s;">🙏</div>
+    </main>
+
+    <script>
+      // Generate confetti on page load
+      const createConfetti = () => {
+        const colors = ["#10B981", "#D97706", "#3B82F6", "#8B5CF6", "#EC4899"];
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+          confetti.style.left = Math.random() * 100 + "vw";
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.delay = Math.random() * 0.5 + "s";
+          document.body.appendChild(confetti);
+
+          setTimeout(() => confetti.remove(), 3000);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        createConfetti();
+
+        // Get donation type from URL
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get("type") || "human";
+        const badge = document.getElementById("donationTypeBadge");
+
+        if (type === "animal") {
+          badge.textContent = "🐾 Animal Donation Received";
+          badge.className = "inline-block mb-6 px-4 py-2 rounded-full bg-orange-100 text-orange-700 text-sm font-semibold";
+        } else {
+          badge.textContent = "👥 Human Donation Received";
+          badge.className = "inline-block mb-6 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold";
+        }
+
+        const donationId = params.get("donationId");
+        const trackLink = document.getElementById("trackDonationLink");
+        if (trackLink && donationId) {
+          trackLink.href = `./tracking.html?donationId=${encodeURIComponent(donationId)}`;
+        }
+      });
+    </script>
+  </body>
+</html>

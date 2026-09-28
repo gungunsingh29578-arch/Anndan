@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raw Ingredients Donation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 text-gray-900">
+    <main class="mx-auto flex min-h-screen w-full max-w-2xl items-center justify-center px-4 py-10">
+      <section class="w-full rounded-3xl bg-white/95 p-6 shadow-xl ring-1 ring-sky-100 sm:p-10">
+        <a id="backLink" href="./index.html" class="text-sm font-semibold text-emerald-700 hover:underline">← Back to Home</a>
+        <div class="mt-4 border-b border-slate-100 pb-6">
+          <p class="text-xs font-bold uppercase tracking-widest text-sky-700">Raw Ingredients Donation</p>
+          <h1 class="mt-2 text-3xl font-extrabold tracking-tight">Complete Your Donation</h1>
+          <p id="ngoName" class="mt-2 text-sm text-gray-600"></p>
+        </div>
+
+        <form id="rawIngredientsForm" class="mt-6 space-y-5" novalidate>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="gmail">Gmail</label>
+            <input id="gmail" type="email" required placeholder="yourname@gmail.com" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" />
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="contactNumber">Contact Number</label>
+            <input id="contactNumber" type="tel" required inputmode="numeric" maxlength="10" placeholder="Enter 10-digit contact number" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" />
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="weight">Weight (kg)</label>
+            <input id="weight" type="number" required min="0.1" step="0.1" placeholder="Enter ingredient weight" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100" />
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="ingredientPhoto">Upload Ingredient Photo</label>
+            <input id="ingredientPhoto" type="file" accept="image/*" required class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm file:mr-3 file:rounded-full file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:text-sky-700" />
+          </div>
+          <p id="formStatus" class="hidden text-center text-sm" role="status" aria-live="polite"></p>
+          <button type="submit" class="w-full rounded-xl bg-sky-600 px-4 py-3 font-semibold text-white shadow-md transition hover:bg-sky-700">Review Agreement</button>
+        </form>
+
+        <section id="agreementPanel" class="mt-6 hidden rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <h2 class="text-lg font-bold text-slate-900">Donation Agreement and Terms</h2>
+          <div class="mt-3 space-y-2 text-sm leading-6 text-slate-700">
+            <p>1. I confirm that I am legally authorized to donate the listed raw ingredients and that the declared quantity, type, and condition are accurate.</p>
+            <p>2. The ingredients are clean, hygienic, properly packed, and safe for human or animal consumption at the time of donation, subject to inspection by the receiving organisation.</p>
+            <p>3. I will disclose any known food safety, allergy, storage, or handling concerns before handover and acknowledge that false or unsafe information may result in rejection of the donation.</p>
+            <p>4. The selected NGO or receiver may inspect, accept, refuse, or reschedule the collection based on food safety, packaging, quality, or compliance requirements.</p>
+            <p>5. I understand that submission does not guarantee pickup or acceptance, and that Annadan acts only as a coordination platform and is not a food safety authority or government body.</p>
+          </div>
+          <label class="mt-4 flex items-start gap-3 text-sm font-semibold text-slate-800">
+            <input id="agreeTerms" type="checkbox" class="mt-1 h-4 w-4 accent-emerald-600" />
+            I have read, understood, and agree to these donation terms and the food safety declaration above.
+          </label>
+          <button id="finalSubmitBtn" type="button" disabled class="mt-5 w-full cursor-not-allowed rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white opacity-50">Submit Donation</button>
+        </section>
+      </section>
+    </main>
+    <script src="./api.js"></script>
+    <script src="./donor-auth.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const donorProfile = window.AnnadanDonorAuth.requireDonor();
+        if (!donorProfile) return;
+        const ngo = params.get("ngo") || "Selected NGO";
+        const form = document.getElementById("rawIngredientsForm");
+        const agreementPanel = document.getElementById("agreementPanel");
+        const agreeTerms = document.getElementById("agreeTerms");
+        const finalSubmitBtn = document.getElementById("finalSubmitBtn");
+        const status = document.getElementById("formStatus");
+        document.getElementById("gmail").value = donorProfile.email;
+        document.getElementById("gmail").readOnly = true;
+        document.getElementById("contactNumber").value = donorProfile.contact || "";
+        document.getElementById("contactNumber").readOnly = true;
+        document.getElementById("ngoName").textContent = `Selected NGO: ${ngo}`;
+        const setStatus = (message, error = false) => {
+          status.textContent = message;
+          status.className = `mt-3 text-center text-sm ${error ? "text-red-600" : "text-emerald-700"}`;
+          status.classList.remove("hidden");
+        };
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const gmail = document.getElementById("gmail").value.trim();
+          const contact = document.getElementById("contactNumber").value.trim();
+          const weight = Number(document.getElementById("weight").value);
+          const photo = document.getElementById("ingredientPhoto");
+          if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(gmail) || !/^\d{10}$/.test(contact) || !weight || weight <= 0 || !photo.files.length) {
+            setStatus("Please enter a valid Gmail, 10-digit contact number, weight, and photo.", true);
+            return;
+          }
+          agreementPanel.classList.remove("hidden");
+          agreementPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+          setStatus("Please review and accept the agreement.");
+        });
+        agreeTerms.addEventListener("change", () => {
+          finalSubmitBtn.disabled = !agreeTerms.checked;
+          finalSubmitBtn.classList.toggle("opacity-50", !agreeTerms.checked);
+          finalSubmitBtn.classList.toggle("cursor-not-allowed", !agreeTerms.checked);
+        });
+        finalSubmitBtn.addEventListener("click", async () => {
+          if (!agreeTerms.checked) return;
+          const formData = new FormData();
+          formData.append("ngoName", ngo);
+          formData.append("ngo", ngo);
+          formData.append("email", donorProfile.email);
+          formData.append("contactNumber", donorProfile.contact || "");
+          formData.append("weight", document.getElementById("weight").value);
+          const photo = document.getElementById("ingredientPhoto");
+          if (photo.files[0]) formData.append("photo", photo.files[0]);
+          try {
+            await window.AnnadanAPI.request("/extras/raw-donations", { method: "POST", body: formData });
+            setStatus("Raw ingredients donation submitted successfully.");
+            form.reset();
+            agreementPanel.classList.add("hidden");
+            finalSubmitBtn.disabled = true;
+            finalSubmitBtn.classList.add("opacity-50", "cursor-not-allowed");
+          } catch (error) {
+            setStatus(error.message || "Could not submit donation.", true);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

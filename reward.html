@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Annadan Rewards</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-amber-50 via-white to-emerald-50 text-gray-900">
+    <main class="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-4 py-10">
+      <section class="w-full max-w-3xl rounded-3xl bg-white/95 p-8 shadow-xl ring-1 ring-amber-100 sm:p-10">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <a href="./dashboard.html?role=donor&from=login" class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">
+              <span aria-hidden="true">←</span>
+              Back to Dashboard
+            </a>
+            <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">Reward Box</h1>
+          </div>
+          <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700">Donor Reward</span>
+        </div>
+
+        <div class="rounded-3xl border border-amber-100 bg-amber-50/80 p-6 shadow-sm">
+          <h2 class="text-xl font-semibold text-gray-900">How points are earned</h2>
+          <p class="mt-3 text-sm text-gray-700">
+            Every human donation earns points based on the donation size. Use these points to unlock rewards and support more people.
+          </p>
+          <div class="mt-6 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl bg-white p-5 text-center shadow-sm">
+              <p class="text-sm font-medium text-gray-500">Small Donation</p>
+              <p class="mt-4 text-3xl font-bold text-emerald-700">10</p>
+              <p class="mt-2 text-sm text-gray-600">points</p>
+            </div>
+            <div class="rounded-3xl bg-white p-5 text-center shadow-sm">
+              <p class="text-sm font-medium text-gray-500">Average Donation</p>
+              <p class="mt-4 text-3xl font-bold text-amber-600">15</p>
+              <p class="mt-2 text-sm text-gray-600">points</p>
+            </div>
+            <div class="rounded-3xl bg-white p-5 text-center shadow-sm">
+              <p class="text-sm font-medium text-gray-500">Large Donation</p>
+              <p class="mt-4 text-3xl font-bold text-orange-600">20</p>
+              <p class="mt-2 text-sm text-gray-600">points</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 rounded-3xl border border-emerald-100 bg-white/90 p-6 shadow-sm">
+          <h3 class="text-lg font-semibold text-gray-900">Reward summary</h3>
+          <p class="mt-3 text-sm text-gray-700">
+            Save your earned points to claim bonus support items and recognition for giving back. The more you donate, the faster you reach higher reward tiers.
+          </p>
+          <div class="mt-6 grid gap-4 sm:grid-cols-2">
+            <div class="rounded-3xl border border-emerald-100 bg-emerald-50 p-4">
+              <p class="font-semibold text-gray-900">Current donor rank</p>
+              <p class="mt-2 text-3xl font-bold text-emerald-700">Top 10%</p>
+            </div>
+            <div class="rounded-3xl border border-orange-100 bg-orange-50 p-4">
+              <p class="font-semibold text-gray-900">Next reward goal</p>
+              <p class="mt-2 text-3xl font-bold text-orange-600">120 pts</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="./api.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const rewardParams = new URLSearchParams(window.location.search);
+        let savedOrganizationType = "";
+        try {
+          savedOrganizationType = JSON.parse(localStorage.getItem("annadanProfile") || "{}").organizationType || "";
+        } catch (error) {
+          savedOrganizationType = "";
+        }
+        const organizationType = (rewardParams.get("organizationType") || savedOrganizationType).toLowerCase();
+        if (organizationType === "food-service-establishment") {
+          document.body.innerHTML = `
+            <style>
+              @keyframes aashaReveal {
+                from { opacity: 0; transform: translateY(18px); }
+                to { opacity: 1; transform: translateY(0); }
+              }
+              .aasha-reveal { animation: aashaReveal 700ms ease-out both; }
+              .aasha-reveal-delay { animation-delay: 180ms; }
+              @media (prefers-reduced-motion: reduce) {
+                .aasha-reveal { animation: none; }
+              }
+            </style>
+            <main class="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
+              <section class="w-full rounded-3xl bg-white/95 p-8 text-center shadow-xl ring-1 ring-sky-100 sm:p-12">
+                <a href="./dashboard.html?role=donor&organizationType=food-service-establishment&from=login" class="text-sm font-semibold text-emerald-700 hover:underline">← Back to Dashboard</a>
+                <p class="aasha-reveal mt-8 text-xs font-bold uppercase tracking-widest text-sky-700">Aasha Partnership</p>
+                <h1 class="aasha-reveal aasha-reveal-delay mt-3 text-3xl font-extrabold tracking-tight text-slate-900">Aasha</h1>
+                <p class="aasha-reveal aasha-reveal-delay mx-auto mt-4 max-w-xl text-gray-600">Donate safe surplus food, and in return, we will advertise your Food Service Establishment on our social media pages and the Aandan website.</p>
+              </section>
+            </main>`;
+          return;
+        }
+        const donations = await (async () => {
+          try {
+            const data = await window.AnnadanAPI.request("/donors/me");
+            return Array.isArray(data.donations) ? data.donations.filter((item) => item.status !== "CANCELLED") : [];
+          } catch (error) {
+            try {
+              const data = JSON.parse(localStorage.getItem("annadanDonations") || "[]");
+              return Array.isArray(data) ? data.filter((item) => item.status !== "rejected") : [];
+            } catch (inner) {
+              return [];
+            }
+          }
+        })();
+        const dayKey = (value) => {
+          const date = new Date(value);
+          return Number.isNaN(date.getTime()) ? "" : `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+        };
+        const activityDays = [...new Set(donations.map((item) => dayKey(item.createdAt)).filter(Boolean))]
+          .map((value) => new Date(value))
+          .sort((a, b) => b - a);
+        let currentStreak = 0;
+        let longestStreak = 0;
+        if (activityDays.length) {
+          let run = 1;
+          longestStreak = 1;
+          for (let index = 1; index < activityDays.length; index += 1) {
+            const difference = Math.round((activityDays[index - 1] - activityDays[index]) / 86400000);
+            run = difference === 1 ? run + 1 : 1;
+            longestStreak = Math.max(longestStreak, run);
+          }
+          const today = new Date();
+          const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          const latestStart = new Date(activityDays[0].getFullYear(), activityDays[0].getMonth(), activityDays[0].getDate());
+          if (Math.floor((todayStart - latestStart) / 86400000) <= 1) {
+            currentStreak = 1;
+            for (let index = 1; index < activityDays.length; index += 1) {
+              if (Math.round((activityDays[index - 1] - activityDays[index]) / 86400000) === 1) currentStreak += 1;
+              else break;
+            }
+          }
+        }
+        const humanTotal = donations.filter((item) => String(item.type || item.intendedType || item.aiClassification || "").toLowerCase().includes("human")).reduce((total, item) => total + Number(item.quantityKg || item.quantity || 0), 0);
+        const animalTotal = donations.filter((item) => String(item.type || item.intendedType || item.aiClassification || "").toLowerCase().includes("animal")).reduce((total, item) => total + Number(item.quantityKg || item.quantity || 0), 0);
+        const nextMilestone = [7, 15, 30, 50, 100].find((value) => value > currentStreak) || 100;
+        document.body.innerHTML = `
+          <main class="mx-auto min-h-screen w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+            <header class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div><a href="./dashboard.html?role=donor&from=login" class="text-sm font-semibold text-emerald-700 hover:underline">← Back to Dashboard</a><h1 class="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Rewards</h1><p class="mt-2 text-gray-600">Your donation progress and rewards.</p></div><button id="refreshRewards" class="rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-700">Refresh</button></header>
+            <section class="grid gap-6 lg:grid-cols-2"><article class="rounded-3xl bg-emerald-700 p-6 text-white shadow-xl"><p class="text-sm font-semibold uppercase text-emerald-100">🔥 Your Streak</p><p class="mt-3 text-5xl font-extrabold">${currentStreak} <span class="text-xl">days</span></p><p class="mt-6 font-semibold">${currentStreak ? "You're on fire! Keep it going 🔥" : "Donate to start your streak."}</p><div class="mt-5 h-3 rounded-full bg-white/20"><div class="h-full rounded-full bg-amber-300" style="width:${Math.min((currentStreak / nextMilestone) * 100, 100)}%"></div></div><p class="mt-2 text-sm text-emerald-100">Longest: ${longestStreak} days · Next milestone: ${nextMilestone} days</p>${currentStreak >= 50 ? '<button data-coupon="streak" class="coupon-button mt-5 rounded-xl bg-amber-300 px-4 py-2 font-bold text-emerald-950">View Coupon</button>' : ""}</article><article class="rounded-3xl border border-amber-100 bg-white p-6 shadow-sm"><h2 class="text-xl font-bold">🎁 Donation Rewards</h2><p class="mt-1 text-sm text-gray-600">Donate more, earn more!</p><div class="mt-5 space-y-3"><div class="rounded-2xl bg-amber-50 p-4"><p class="font-semibold">100 KG Human Donation</p><p>${humanTotal.toFixed(1)} / 100 kg</p>${humanTotal >= 100 ? '<button data-coupon="human" class="coupon-button mt-3 rounded-xl bg-amber-500 px-3 py-2 text-sm font-semibold text-white">View Coupon</button>' : '<p class="mt-2 text-sm text-gray-500">Keep donating to unlock this reward!</p>'}</div><div class="rounded-2xl bg-orange-50 p-4"><p class="font-semibold">250 KG Animal Donation</p><p>${animalTotal.toFixed(1)} / 250 kg</p>${animalTotal >= 250 ? '<button data-coupon="animal" class="coupon-button mt-3 rounded-xl bg-orange-500 px-3 py-2 text-sm font-semibold text-white">View Coupon</button>' : '<p class="mt-2 text-sm text-gray-500">Keep donating to unlock this reward!</p>'}</div></div></article></section>
+            <section class="mt-6 rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm"><h2 class="text-xl font-bold">🏆 Leaderboard</h2><p class="mt-1 text-sm text-gray-600">Top donors near you · 📍 Within 20 km</p><p class="mt-5 rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">No nearby donor data is available yet. Location-based ranking needs a shared backend donor database.</p></section>
+          </main><div id="couponSheet" class="fixed inset-0 z-10 hidden bg-gray-900/40 p-4"><div class="mx-auto mt-auto max-w-lg rounded-3xl bg-white p-6 shadow-2xl"><div class="flex justify-between"><p class="font-bold uppercase tracking-widest text-emerald-700">🎁 AANDAN REWARD</p><button id="closeCoupon" class="text-2xl text-gray-500">×</button></div><h2 id="couponTitle" class="mt-5 text-2xl font-extrabold"></h2><p id="couponDiscount" class="mt-4 text-5xl font-black text-orange-500"></p><p class="mt-2 text-gray-600">Your contribution is making a difference!</p><div class="mt-5 rounded-2xl border-2 border-dashed border-emerald-200 bg-emerald-50 p-4"><p class="text-xs uppercase text-gray-500">Coupon Code</p><p id="couponCode" class="mt-1 text-xl font-bold tracking-widest text-emerald-800"></p></div><p class="mt-4 text-sm text-gray-600">Valid for 30 days · One use per donor.</p><div class="mt-6 grid grid-cols-2 gap-3"><button id="copyCoupon" class="rounded-xl border border-emerald-600 px-4 py-3 font-semibold text-emerald-700">Copy Code</button><button id="useCoupon" class="rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white">Use Coupon</button></div><p id="couponMessage" class="mt-3 text-center text-sm text-emerald-700"></p></div></div>`;
+        const coupons = { streak: ["50 DAY STREAK REWARD", "20% OFF", "AANDAN-STREAK-50"], human: ["HUMAN DONATION REWARD", "15% OFF", "AANDAN-HUMAN-100"], animal: ["ANIMAL DONATION REWARD", "20% OFF", "AANDAN-ANIMAL-250"] };
+        document.querySelectorAll(".coupon-button").forEach((button) => button.addEventListener("click", () => { const coupon = coupons[button.dataset.coupon]; document.getElementById("couponTitle").textContent = coupon[0]; document.getElementById("couponDiscount").textContent = coupon[1]; document.getElementById("couponCode").textContent = coupon[2]; document.getElementById("couponSheet").dataset.code = coupon[2]; document.getElementById("couponSheet").classList.remove("hidden"); }));
+        document.getElementById("closeCoupon").addEventListener("click", () => document.getElementById("couponSheet").classList.add("hidden")); document.getElementById("copyCoupon").addEventListener("click", async () => { await navigator.clipboard.writeText(document.getElementById("couponSheet").dataset.code); document.getElementById("couponMessage").textContent = "Coupon copied! ✓"; }); document.getElementById("useCoupon").addEventListener("click", () => { document.getElementById("couponMessage").textContent = "Show this coupon to an Aandan partner to redeem it."; }); document.getElementById("refreshRewards").addEventListener("click", () => location.reload());
+      });
+    </script>
+  </body>
+</html>

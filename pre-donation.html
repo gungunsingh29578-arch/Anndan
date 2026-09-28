@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pre booking fo Donation | Aanndaan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .ticker-strip {
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(255,255,255,0.8), rgba(251,191,36,0.12));
+        border: 1px solid rgba(16,185,129,0.2);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+        margin: 12px 0 18px;
+      }
+
+      .ticker-track {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        min-width: max-content;
+        padding: 10px 0;
+        animation: tickerScroll 18s linear infinite;
+      }
+
+      .ticker-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(16,185,129,0.2);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        color: #0f172a;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+      }
+
+      @keyframes tickerScroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      .top-strip { border-radius: 20px; }
+      .bottom-strip { border-radius: 18px; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-amber-50 via-white to-emerald-50 text-gray-900">
+    <div class="mx-auto max-w-5xl px-4 pt-5">
+      <div class="ticker-strip top-strip">
+        <div class="ticker-track">
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
+      <section class="w-full rounded-3xl bg-white/95 p-8 shadow-xl ring-1 ring-amber-100 sm:p-10">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <a id="backLink" href="./dashboard.html?role=donor&from=login" class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">
+              <span aria-hidden="true">←</span>
+              Back to Dashboard
+            </a>
+            <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">Pre booking for Donation</h1>
+          </div>
+        </div>
+
+        <form id="preDonationForm" class="space-y-6" novalidate>
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="donorName">Name</label>
+            <input id="donorName" name="donorName" type="text" required pattern="[A-Za-z ]+" title="Name can contain letters and spaces only." class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Enter your full name" />
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="donorContact">Contact Number</label>
+            <input id="donorContact" name="donorContact" type="tel" required pattern="[0-9]{10}" inputmode="numeric" maxlength="10" title="Contact number must contain exactly 10 digits." class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="9523748199" />
+            <p class="mt-2 text-sm text-gray-500">Enter 10-digit contact number.</p>
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="donorContactTime">Best Time to Contact</label>
+            <select id="donorContactTime" name="donorContactTime" required class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+              <option value="" disabled selected>Select preferred contact time</option>
+              <option value="Morning (8AM - 11AM)">Morning (8AM - 11AM)</option>
+              <option value="Afternoon (11AM - 2PM)">Afternoon (11AM - 2PM)</option>
+              <option value="Evening (4PM - 7PM)">Evening (4PM - 7PM)</option>
+              <option value="Any time">Any time</option>
+            </select>
+            <p class="mt-2 text-sm text-gray-500">Choose when you prefer the team to contact you.</p>
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="eventTiming">Event end Timing</label>
+            <input id="eventTiming" name="eventTiming" type="time" required class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="eventType">Type of Event</label>
+            <select id="eventType" name="eventType" required class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+              <option value="" disabled selected>Select event type</option>
+              <option value="wedding">wedding</option>
+              <option value="festival">festival</option>
+              <option value="family party">family party</option>
+              <option value="Other">other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700" for="donorLocation">Location</label>
+            <div class="relative">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="text-emerald-600">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Z" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="9" r="2.5" fill="#10B981"/>
+                </svg>
+              </div>
+              <input id="donorLocation" name="donorLocation" type="text" required class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 pl-12 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Enter your location or use current location" />
+            </div>
+            <div class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <button id="donorUseLocationBtn" type="button" class="rounded-xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">
+                Use Current Location
+              </button>
+              <span id="donorLocationStatus" class="text-sm text-emerald-700"></span>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full rounded-xl bg-gradient-to-r from-orange-500 to-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg">
+            Submit Pre Donation
+          </button>
+
+          <p id="preDonationStatus" class="hidden text-center text-sm"></p>
+        </form>
+      </section>
+    </main>
+
+    <div class="mx-auto max-w-5xl px-4 pb-6">
+      <div class="ticker-strip bottom-strip">
+        <div class="ticker-track">
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="./validation.js"></script>
+    <script src="./api.js"></script>
+    <script src="./donor-auth.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const donorProfile = window.AnnadanDonorAuth.requireDonor();
+        if (!donorProfile) return;
+        const role = "donor";
+        const backLink = document.getElementById("backLink");
+        const donorName = document.getElementById("donorName");
+        const donorContact = document.getElementById("donorContact");
+        const donorLocation = document.getElementById("donorLocation");
+        const donorContactTime = document.getElementById("donorContactTime");
+        const eventTiming = document.getElementById("eventTiming");
+        const eventType = document.getElementById("eventType");
+        const donorUseLocationBtn = document.getElementById("donorUseLocationBtn");
+        const donorLocationStatus = document.getElementById("donorLocationStatus");
+        const preDonationForm = document.getElementById("preDonationForm");
+        const preDonationStatus = document.getElementById("preDonationStatus");
+
+        if (backLink) {
+          backLink.href = `./dashboard.html?role=${role}&from=login`;
+        }
+
+        donorName.value = donorProfile.name;
+        donorName.readOnly = true;
+        donorContact.value = donorProfile.contact || "";
+        donorContact.readOnly = true;
+
+        const setStatus = (message, isError = false) => {
+          preDonationStatus.textContent = message;
+          preDonationStatus.className = `mt-3 text-center text-sm ${isError ? "text-red-600" : "text-emerald-700"}`;
+          preDonationStatus.classList.remove("hidden");
+        };
+
+        donorUseLocationBtn.addEventListener("click", () => {
+          if (!navigator.geolocation) {
+            setStatus("Geolocation not supported in this browser.", true);
+            return;
+          }
+
+          donorLocationStatus.textContent = "Getting current location...";
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const value = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+              donorLocation.value = value;
+              donorLocationStatus.textContent = "Current location added.";
+              setStatus("", false);
+            },
+            (error) => {
+              donorLocationStatus.textContent = "";
+              setStatus("Unable to get location. Please allow location access.", true);
+            },
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+          );
+        });
+
+        preDonationForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const name = donorName.value.trim();
+          const contact = donorContact.value.trim();
+          const contactTime = donorContactTime?.value.trim() || "";
+          const eventTimingValue = eventTiming.value;
+          const eventTypeValue = eventType.value.trim();
+          const location = donorLocation.value.trim();
+
+          if (!name || !contact || !contactTime || !eventTimingValue || !eventTypeValue || !location) {
+            setStatus("Please fill in name, contact, event timing, event type, and location.", true);
+            return;
+          }
+          if (!/^[A-Za-z ]+$/.test(name)) {
+            setStatus("Name can contain letters and spaces only.", true);
+            donorName.focus();
+            return;
+          }
+          if (!contactTime) {
+            setStatus("Please choose a preferred contact time.", true);
+            return;
+          }
+
+          if (!/^\d{10}$/.test(contact)) {
+            setStatus("Contact number must be 10 digits.", true);
+            return;
+          }
+
+          try {
+            await window.AnnadanAPI.request("/extras/pre-donations", {
+              method: "POST",
+              body: { name, contact, contactTime, eventTiming: eventTimingValue, eventType: eventTypeValue, location },
+            });
+            setStatus(`Pre donation details submitted successfully. We will contact you ${contactTime.toLowerCase()}.`);
+            preDonationForm.reset();
+            donorLocationStatus.textContent = "";
+          } catch (error) {
+            setStatus(error.message || "Could not save pre-donation.", true);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

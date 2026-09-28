@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Annadan Donation Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .ticker-strip {
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(255,255,255,0.8), rgba(251,191,36,0.12));
+        border: 1px solid rgba(16,185,129,0.2);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+        margin: 12px 0 18px;
+      }
+
+      .ticker-track {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        min-width: max-content;
+        padding: 10px 0;
+        animation: tickerScroll 18s linear infinite;
+      }
+
+      .ticker-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(16,185,129,0.2);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        color: #0f172a;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+      }
+
+      @keyframes tickerScroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      .top-strip { border-radius: 20px; }
+      .bottom-strip { border-radius: 18px; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-amber-50 via-white to-emerald-50 text-gray-900">
+    <div class="mx-auto max-w-5xl px-4 pt-5">
+      <div class="ticker-strip top-strip">
+        <div class="ticker-track">
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
+      <section class="w-full rounded-3xl bg-white/95 p-8 shadow-xl ring-1 ring-amber-100 sm:p-10">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <a id="backToDashboardLink" href="./dashboard.html?from=login" class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:underline">
+              <span aria-hidden="true">←</span>
+              Back
+            </a>
+            <h1 id="donationFormTitle" class="mt-3 text-3xl font-extrabold tracking-tight text-gray-900">Add Donation Details</h1>
+          </div>
+          <span id="donationTypeBadge" class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">Human</span>
+        </div>
+
+        <form id="donationDetailsForm" class="space-y-6" novalidate>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="foodType">Food Type</label>
+            <input id="foodType" name="foodType" type="text" required class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+          </div>
+
+          <div>
+            <span class="mb-1 block text-sm font-medium text-gray-700">Quality</span>
+            <div class="flex flex-wrap gap-3">
+              <label class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm cursor-pointer">
+                <input type="radio" name="quality" value="fresh" checked class="h-4 w-4 text-emerald-600" />
+                Fresh
+              </label>
+              <label class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm cursor-pointer">
+                <input type="radio" name="quality" value="near-expiry" class="h-4 w-4 text-emerald-600" />
+                Near expiry
+              </label>
+              <label class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm cursor-pointer">
+                <input type="radio" name="quality" value="expired" class="h-4 w-4 text-emerald-600" />
+                Expired
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="quantity">Quantity (kg)</label>
+            <input id="quantity" name="quantity" type="number" min="1" step="0.1" required class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            <p id="quantityCategory" class="mt-2 text-sm text-gray-500">1–5 kg = Small, 5–10 kg = Medium, 10+ kg = Large</p>
+          </div>
+
+          <div id="cookedTimeWrapper" class="grid gap-3 sm:grid-cols-2">
+            <div class="w-full">
+              <label class="mb-1 block text-sm font-medium text-gray-700" for="cookedDate">Cooked Date</label>
+              <input id="cookedDate" name="cookedDate" type="date" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+            <div class="w-full">
+              <label class="mb-1 block text-sm font-medium text-gray-700" for="cookedTime">Cooked Time</label>
+              <input id="cookedTime" name="cookedTime" type="time" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+          </div>
+
+          <div id="expiryTimeWrapper" class="hidden grid gap-3 sm:grid-cols-2">
+            <div class="w-full">
+              <label class="mb-1 block text-sm font-medium text-gray-700" for="expiryDate">Expiry Date</label>
+              <input id="expiryDate" name="expiryDate" type="date" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+            <div class="w-full">
+              <label class="mb-1 block text-sm font-medium text-gray-700" for="expiryTime">Expiry Time</label>
+              <input id="expiryTime" name="expiryTime" type="time" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="donationPhoto">Upload Photo</label>
+            <input id="donationPhoto" name="donationPhoto" type="file" accept="image/*" class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm outline-none file:rounded-full file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-emerald-700" />
+          </div>
+
+          <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+            <label class="flex items-start gap-3 text-sm text-gray-700">
+              <input id="termsCheckbox" type="checkbox" class="mt-1 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
+              <span>
+                I confirm that I am legally authorized to donate the listed food item(s), that the information provided is accurate and complete, and that the food is safe, hygienic, properly packed, and fit for donation under applicable food safety and local regulations. I understand that Annadan and the receiving organisation may inspect, refuse, or reject any donation if it is unsafe, inaccurate, expired, contaminated, or non-compliant. I accept full responsibility for the accuracy of the details submitted and agree that Annadan is not liable for any loss, injury, or legal issue arising from false, unsafe, or unauthorized donation information.
+              </span>
+            </label>
+          </div>
+
+          <button id="submitDonationBtn" type="submit" disabled class="w-full rounded-xl bg-gradient-to-r from-orange-500 to-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50">
+            Submit Donation
+          </button>
+
+          <p id="donationStatus" class="hidden text-center text-sm"></p>
+        </form>
+      </section>
+    </main>
+
+    <div class="mx-auto max-w-5xl px-4 pb-6">
+      <div class="ticker-strip bottom-strip">
+        <div class="ticker-track">
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+          <span class="ticker-pill">Ankit Company</span>
+          <span class="ticker-pill">Shivam Company</span>
+          <span class="ticker-pill">Gungun Company</span>
+          <span class="ticker-pill">Nishant Company</span>
+          <span class="ticker-pill">Vedant Company</span>
+          <span class="ticker-pill">Ujjwal Company</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="./validation.js"></script>
+    <script src="./api.js"></script>
+    <script src="./donor-auth.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get("type") || "human";
+        const donorProfile = window.AnnadanDonorAuth.requireDonor();
+        if (!donorProfile) return;
+        const role = "donor";
+        const backLink = document.getElementById("backToDashboardLink");
+        const donationFormTitle = document.getElementById("donationFormTitle");
+        const donationTypeBadge = document.getElementById("donationTypeBadge");
+        const donationDetailsForm = document.getElementById("donationDetailsForm");
+        const donationStatus = document.getElementById("donationStatus");
+
+        const typeLabel = type === "animal" ? "Animal" : "Human";
+        donationFormTitle.textContent = `Add ${typeLabel} Donation Details`;
+        donationTypeBadge.textContent = typeLabel;
+        donationTypeBadge.className = `inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${type === "animal" ? "bg-orange-100 text-orange-700" : "bg-emerald-100 text-emerald-700"}`;
+
+        if (backLink) {
+          backLink.href = `./dashboard.html?role=${role}&from=login`;
+        }
+
+        const quantityInput = document.getElementById("quantity");
+        const quantityCategory = document.getElementById("quantityCategory");
+        const submitDonationBtn = document.getElementById("submitDonationBtn");
+        const termsCheckbox = document.getElementById("termsCheckbox");
+        const cookedTimeWrapper = document.getElementById("cookedTimeWrapper");
+        const expiryTimeWrapper = document.getElementById("expiryTimeWrapper");
+
+        const updateDonationFormFields = () => {
+          const isHuman = type === "human";
+          const isAnimal = type === "animal";
+
+          if (expiryTimeWrapper) {
+            expiryTimeWrapper.classList.toggle("hidden", !isHuman);
+          }
+
+          if (cookedTimeWrapper) {
+            cookedTimeWrapper.classList.toggle("hidden", isAnimal ? false : false);
+          }
+
+          if (isAnimal) {
+            const expiryInput = document.getElementById("expiryTime");
+            if (expiryInput) expiryInput.value = "";
+          }
+        };
+
+        const updateSubmitButtonState = () => {
+          submitDonationBtn.disabled = !termsCheckbox.checked;
+        };
+
+        termsCheckbox.addEventListener("change", updateSubmitButtonState);
+        updateSubmitButtonState();
+
+        const getSizeCategory = (value) => {
+          if (value >= 10) return "Large";
+          if (value >= 5) return "Medium";
+          if (value >= 1) return "Small";
+          return "";
+        };
+
+        const updateQuantityCategory = () => {
+          const value = Number(quantityInput.value);
+          const category = getSizeCategory(value);
+          if (!category) {
+            quantityCategory.textContent = "1–5 kg = Small, 5–10 kg = Medium, 10+ kg = Large";
+            quantityCategory.className = "mt-2 text-sm text-gray-500";
+            return;
+          }
+          quantityCategory.textContent = `Donation size: ${category}`;
+          quantityCategory.className = "mt-2 text-sm font-semibold text-emerald-700";
+        };
+
+        quantityInput.addEventListener("input", updateQuantityCategory);
+        updateDonationFormFields();
+        updateQuantityCategory();
+
+        donationDetailsForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const foodType = document.getElementById("foodType").value.trim();
+          const quantity = Number(quantityInput.value);
+          const quality = donationDetailsForm.elements["quality"].value;
+          const photoInput = document.getElementById("donationPhoto");
+          const cookedDate = document.getElementById("cookedDate").value;
+          const cookedTime = document.getElementById("cookedTime").value;
+          const expiryDate = document.getElementById("expiryDate").value;
+          const expiryTime = document.getElementById("expiryTime").value;
+          const termsChecked = document.getElementById("termsCheckbox").checked;
+          const sizeCategory = getSizeCategory(quantity);
+
+          if (!foodType || !quantity || quantity < 1) {
+            donationStatus.className = "mt-3 text-center text-sm text-red-600";
+            donationStatus.textContent = "Please enter the food type and a valid quantity (kg).";
+            donationStatus.classList.remove("hidden");
+            return;
+          }
+
+          if (!termsChecked) {
+            donationStatus.className = "mt-3 text-center text-sm text-red-600";
+            donationStatus.textContent = "Please agree to the terms and confirm that the information is accurate before submitting.";
+            donationStatus.classList.remove("hidden");
+            return;
+          }
+
+          if (type === "human" && (!expiryDate || !expiryTime)) {
+            donationStatus.className = "mt-3 text-center text-sm text-red-600";
+            donationStatus.textContent = "Please enter the expiry date and time for human donation.";
+            donationStatus.classList.remove("hidden");
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("foodName", foodType);
+          formData.append("foodType", foodType);
+          formData.append("quantity", String(quantity));
+          formData.append("quantityKg", String(quantity));
+          formData.append("unit", "kg");
+          formData.append("quality", quality);
+          formData.append("foodCondition", quality);
+          formData.append("cookedDate", cookedDate);
+          formData.append("cookedTime", cookedTime);
+          formData.append("preparationDate", cookedDate);
+          formData.append("preparationTime", cookedTime);
+          formData.append("expiryDate", type === "human" ? expiryDate : "");
+          formData.append("expiryTime", type === "human" ? expiryTime : "");
+          formData.append("sizeCategory", sizeCategory);
+          formData.append("type", type);
+          formData.append("intendedType", type);
+          formData.append("pickupAddress", donorProfile.location || donorProfile.address || "");
+          if (donorProfile.latitude) formData.append("latitude", donorProfile.latitude);
+          if (donorProfile.longitude) formData.append("longitude", donorProfile.longitude);
+          if (photoInput.files && photoInput.files[0]) formData.append("foodImage", photoInput.files[0]);
+
+          try {
+            donationStatus.className = "mt-3 text-center text-sm text-emerald-700";
+            donationStatus.textContent = "Submitting donation...";
+            donationStatus.classList.remove("hidden");
+
+            if (!window.AnnadanAPI.getToken()) {
+              const localDonations = JSON.parse(localStorage.getItem("annadanDonations") || "[]");
+              const localDonation = {
+                donorName: donorProfile.name,
+                donorEmail: donorProfile.email,
+                foodType,
+                quantityKg: quantity,
+                quality,
+                type,
+                sizeCategory,
+                pickupAddress: donorProfile.location || donorProfile.address || "",
+                createdAt: new Date().toISOString(),
+                status: "submitted",
+              };
+              localDonations.push(localDonation);
+              localStorage.setItem("annadanDonations", JSON.stringify(localDonations));
+              const localDonationId = `LOCAL-${Date.now()}`;
+              donationStatus.textContent = "Donation submitted successfully.";
+              setTimeout(() => {
+                window.location.href = `./donation-success.html?role=${encodeURIComponent(role)}&type=${encodeURIComponent(type)}&quantity=${encodeURIComponent(quantity)}&sizeCategory=${encodeURIComponent(sizeCategory)}&donationId=${encodeURIComponent(localDonationId)}`;
+              }, 500);
+              return;
+            }
+
+            const result = await window.AnnadanAPI.request("/donations", { method: "POST", body: formData });
+            const donationId = result.donation?.donationId || "";
+            donationStatus.textContent = result.message || `Donation submitted: ${quantity} kg (${sizeCategory}), quality ${quality}.`;
+            donationDetailsForm.reset();
+            updateSubmitButtonState();
+            updateQuantityCategory();
+            setTimeout(() => {
+              window.location.href = `./donation-success.html?role=${encodeURIComponent(role)}&type=${encodeURIComponent(type)}&quantity=${encodeURIComponent(quantity)}&sizeCategory=${encodeURIComponent(sizeCategory)}&donationId=${encodeURIComponent(donationId)}`;
+            }, 900);
+          } catch (error) {
+            donationStatus.className = "mt-3 text-center text-sm text-red-600";
+            donationStatus.textContent = error.message || "Could not submit donation.";
+            donationStatus.classList.remove("hidden");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
